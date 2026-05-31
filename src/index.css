@@ -385,31 +385,246 @@ body {
   color: #79c0ff;
 }
 
-@media (max-width: 600px) {
-  .desktop-only {
-    display: none !important;
-  }
-  .holdings-table {
-    min-width: 100% !important;
-  }
+/* ---- Scrollbar styling for table wrapper ---- */
+.table-wrapper {
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: #c1c7d0 transparent;
+}
+.table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+.table-wrapper::-webkit-scrollbar-track {
+  background: transparent;
+}
+.table-wrapper::-webkit-scrollbar-thumb {
+  background: #c1c7d0;
+  border-radius: 3px;
+}
+.dark .table-wrapper::-webkit-scrollbar-thumb {
+  background: #30363d;
+}
+
+/* ---- Scroll hint gradient on mobile ---- */
+.table-scroll-hint {
+  position: relative;
+}
+.table-scroll-hint::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 32px;
+  pointer-events: none;
+  background: linear-gradient(to right, transparent, rgba(255,255,255,0.85));
+  border-radius: 0 12px 12px 0;
+  z-index: 2;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
+.dark .table-scroll-hint::after {
+  background: linear-gradient(to right, transparent, rgba(22,27,34,0.85));
+}
+
+/* ---- Tablet breakpoint ---- */
+@media (max-width: 1024px) {
   .navbar-inner {
-    padding: 0 16px;
-    gap: 16px;
+    padding: 0 20px;
+    gap: 20px;
+  }
+  .page-body {
+    padding: 24px 20px 40px;
+  }
+  .holdings-table th:first-child,
+  .holdings-table td:first-child {
+    padding-left: 16px !important;
+  }
+  .holdings-table th:last-child,
+  .holdings-table td:last-child {
+    padding-right: 16px !important;
+  }
+}
+
+/* ---- Mobile breakpoint ---- */
+@media (max-width: 600px) {
+  .navbar-inner {
+    padding: 0 12px;
+    gap: 10px;
+    height: 52px;
+  }
+  .logo-img {
+    height: 24px;
   }
   .nav-btn {
     padding: 6px 12px;
-    font-size: 13px;
+    font-size: 12px;
+    border-radius: 6px;
+  }
+  .dark-toggle {
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+  }
+  .dark-toggle svg {
+    width: 15px;
+    height: 15px;
   }
   .page-body {
-    padding: 16px 12px 36px;
+    padding: 14px 10px 32px;
+  }
+  .page-header-row {
+    gap: 10px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+  }
+  .page-title {
+    font-size: 17px;
+  }
+  .disclaimer-box {
+    margin-bottom: 14px;
+  }
+  .disclaimer-header {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+  .disclaimer-list {
+    padding: 0 12px 10px 12px;
+  }
+  .disclaimer-list li {
+    font-size: 12px;
+    padding: 4px 0 4px 12px;
   }
   .cards-row {
-    gap: 12px;
+    gap: 10px;
+    margin-bottom: 14px;
   }
   .gains-card {
-    padding: 16px;
+    padding: 14px;
+    border-radius: 10px;
+  }
+  .gains-card-title {
+    font-size: 14px;
+    margin-bottom: 12px;
+  }
+  .gains-table th {
+    font-size: 11px;
+    padding: 0 0 6px 0;
+  }
+  .gains-table td {
+    font-size: 12px;
+    padding: 5px 0;
+  }
+  .gains-table tr.net-gains-row td {
+    font-size: 13px;
+  }
+  .realised-gains,
+  .effective-gains {
+    margin-top: 10px;
+    padding-top: 10px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+  .realised-label, .effective-label {
+    font-size: 14px;
   }
   .realised-amount, .effective-amount {
     font-size: 18px;
+  }
+  .saving-badge {
+    font-size: 12px;
+  }
+  .holdings-section {
+    border-radius: 10px;
+  }
+  .holdings-title {
+    font-size: 15px;
+    padding: 14px 14px 10px;
+  }
+  /* Keep all columns visible – allow horizontal scroll */
+  .holdings-table {
+    min-width: 800px;
+  }
+  .holdings-table th {
+    font-size: 10px;
+    padding: 10px 10px 6px 10px;
+  }
+  .holdings-table td {
+    padding: 10px;
+  }
+  .holdings-table th:first-child,
+  .holdings-table td:first-child {
+    padding-left: 12px !important;
+  }
+  .holdings-table th:last-child,
+  .holdings-table td:last-child {
+    padding-right: 12px !important;
+  }
+  .coin-logo {
+    width: 28px;
+    height: 28px;
+  }
+  .coin-sym {
+    font-size: 12px;
+  }
+  .coin-name-sub {
+    font-size: 10px;
+    max-width: 100px;
+  }
+  .val-main {
+    font-size: 12px;
+  }
+  .val-sub {
+    font-size: 10px;
+  }
+  .gain-pos, .gain-neg {
+    font-size: 12px;
+  }
+  .amount-sell {
+    font-size: 11px;
+  }
+  .view-all-btn {
+    padding: 12px 14px;
+    font-size: 12px;
+  }
+  .how-tooltip {
+    width: 220px;
+    font-size: 10px;
+    left: 0;
+    transform: none;
+  }
+  .how-tooltip::after {
+    left: 30px;
+    transform: none;
+  }
+  .tooltip-popup {
+    font-size: 11px;
+  }
+}
+
+/* ---- Extra-small phones ---- */
+@media (max-width: 380px) {
+  .page-body {
+    padding: 10px 6px 24px;
+  }
+  .navbar-inner {
+    padding: 0 8px;
+    gap: 8px;
+  }
+  .nav-btn {
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  .cards-row {
+    gap: 8px;
+  }
+  .gains-card {
+    padding: 12px;
+  }
+  .realised-amount, .effective-amount {
+    font-size: 16px;
+  }
+  .realised-label, .effective-label {
+    font-size: 13px;
   }
 }

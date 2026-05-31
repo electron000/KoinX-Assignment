@@ -1,6 +1,6 @@
-import { useState, useMemo, useEffect } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { fetchHoldings, fetchCapitalGains } from './data/mockApi.js';
-import koinxLogo from './public/koinx.webp';
+import koinxLogo from './koinx.webp';
 
 const fmtUSD = (n) => {
   if (n === null || n === undefined) return '—';
@@ -54,7 +54,6 @@ function Navbar({ darkMode, setDarkMode }) {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
             )}
           </button>
-          <button className="nav-btn">Get Started for Free</button>
         </div>
       </div>
     </nav>
@@ -169,11 +168,25 @@ function HoldingsTable({ holdings, selected, onToggle, onSelectAll, onDeselectAl
   const VISIBLE = 6;
   const displayed = showAll ? holdings : holdings.slice(0, VISIBLE);
   const allSelected = holdings.length > 0 && holdings.every(h => selected.has(h._key));
+  const scrollRef = React.useRef(null);
+  const [showScrollHint, setShowScrollHint] = useState(true);
+
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const handleScroll = () => {
+      const atEnd = el.scrollLeft + el.clientWidth >= el.scrollWidth - 2;
+      setShowScrollHint(!atEnd);
+    };
+    el.addEventListener('scroll', handleScroll, { passive: true });
+    handleScroll();
+    return () => el.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
     <div className="holdings-section">
       <h2 className="holdings-title">Holdings</h2>
-      <div className="table-wrapper">
+      <div className={clsx('table-wrapper', showScrollHint && 'table-scroll-hint')} ref={scrollRef}>
         <table className="holdings-table">
           <thead>
             <tr>
@@ -190,18 +203,18 @@ function HoldingsTable({ holdings, selected, onToggle, onSelectAll, onDeselectAl
                 Holdings<br/>
                 <span className="sub-header">Current Market Rate</span>
               </th>
-              <th className="right-col desktop-only">Total Current Value</th>
-              <th className="right-col desktop-only">
+              <th className="right-col right-align">Total Current Value</th>
+              <th className="right-col right-align">
                 <Tooltip text="Short-term capital gain/loss (held < 3 years)">
                   Short-term <svg className="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                 </Tooltip>
               </th>
-              <th className="right-col desktop-only">
+              <th className="right-col right-align">
                 <Tooltip text="Long-term capital gain/loss (held ≥ 3 years)">
                   Long-Term <svg className="info-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
                 </Tooltip>
               </th>
-              <th className="right-col desktop-only">Amount to Sell</th>
+              <th className="right-col right-align">Amount to Sell</th>
             </tr>
           </thead>
           <tbody>
@@ -239,22 +252,22 @@ function HoldingsTable({ holdings, selected, onToggle, onSelectAll, onDeselectAl
                     <div className="val-main">{fmtNum(h.totalHolding)} {h.coin}</div>
                     <div className="val-sub">{fmtUSD(h.currentPrice)}/{h.coin}</div>
                   </td>
-                  <td className="right-col desktop-only">
+                  <td className="right-col right-align">
                     <div className="val-main">{fmtUSD(totalVal)}</div>
                   </td>
-                  <td className="right-col desktop-only">
+                  <td className="right-col right-align">
                     <div className={stcgGain >= 0 ? 'gain-pos' : 'gain-neg'}>
                       {fmtGainLoss(stcgGain)}
                     </div>
                     <div className="val-sub">{fmtNum(h.stcg.balance)} {h.coin}</div>
                   </td>
-                  <td className="right-col desktop-only">
+                  <td className="right-col right-align">
                     <div className={ltcgGain >= 0 ? 'gain-pos' : 'gain-neg'}>
                       {fmtGainLoss(ltcgGain)}
                     </div>
                     <div className="val-sub">{fmtNum(h.ltcg.balance)} {h.coin}</div>
                   </td>
-                  <td className="right-col desktop-only">
+                  <td className="right-col right-align">
                     {isSel ? (
                       <span className="amount-sell">{fmtNum(h.totalHolding)} {h.coin}</span>
                     ) : (
@@ -278,7 +291,7 @@ export default function App() {
   const [darkMode, setDarkMode] = useState(false);
   const [holdings, setHoldings] = useState([]);
   const [capitalGains, setCapitalGains] = useState(null);
-  const [selected, setSelected] = useState(new Set(['ETH_1']));
+  const [selected, setSelected] = useState(new Set());
   const [showAll, setShowAll] = useState(false);
   const [loading, setLoading] = useState(true);
 
